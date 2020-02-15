@@ -12,11 +12,41 @@ const app = express();
 
 
 
+																							// const mysql = require('mysql');
+
+																							// var con = mysql.createConnection({
+																							//   // host: "localhost",
+																							//   // user: "root",
+																							//   // password: "1234",
+																							//   // port: "3306",
+																							//   host     : "localhost",
+																							//   user     : "root",
+																							//   password : "1234",
+																							//   database : "UserDetails",
+																							//   port: "3306",
+																							// });
+
+																							// con.connect(function(err) {
+																							//   if (err) throw err;
+																							//   console.log("Connected!");
+																							// });
+
+
+
+
+
+
+
+
+
+
+
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.get("/home",function(req,res){
@@ -32,17 +62,27 @@ app.get("/",function(req,res) {
   res.render('home');
 });
 let posts = [];
+let data = [];
+var uid;
+var pwd;
+
 app.get("/blog", function(req, res){
   res.render("blog", {
     startingContent: homeStartingContent,
     posts: posts
     });
 });
+
+
+
 app.get("/login",function(req,res){
 
-	res.render("login",{contactText:contactContent});
+	res.render("login");
 
 });
+
+
+
 app.get("/home",function(req,res){
 	var locals = {
     homeText: homeStartingContent,
@@ -63,8 +103,8 @@ app.get("/register",function(req,res){
 app.post("/compose",function(req,res){
 
 var post = {
-	postTitle:req.body.entry,
-	postBody:req.body.postBody,
+	postTitle:req.bodyParser.entry,
+	postBody:req.bodyParser.postBody,
 };
 
 	Posts.push(post);
@@ -75,6 +115,29 @@ var post = {
 });
 
 
+app.post("/login",function(req,res){
+
+var datax = {
+	postTitle:req.bodyParser.email,
+	postBody:req.bodyParser.password,
+};
+
+	
+	res.redirect("/");
+
+
+});
+
+
+
+// app.POST("/login",function(req,res){
+// 	uid = res.bodyParser.email;
+// 	pwd = res.bodyParser.password;
+// 	console.log(uid);
+// 	res.render("dash");
+
+
+// });
 app.get("/post/:term",function(req,res){
 	
 	for(var i=0;i<Posts.length;i++){
@@ -94,3 +157,4 @@ app.get("/post/:term",function(req,res){
 app.listen(3000, function() {
   console.log("Server started on port 3000");
 });
+//con.end();
